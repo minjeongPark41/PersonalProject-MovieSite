@@ -22,7 +22,7 @@ function LandingPage() {
         .then(response => {
 
             // array
-            setMovies([response.results])
+            setMovies([...response.results])
             // 가지고 온 이미지들 중에서 첫 번째
             setMainMovieImage(response.results[0])
 
@@ -53,7 +53,8 @@ function LandingPage() {
 
                 {/* Movie Grid Cards */}
 
-            <Row >
+            {/* 사진 사이 사이 간격 띄우는 gutter */}
+            <Row gutter={[16, 16]}>
 
             {/* 지금 20개의 영화 데이터 담긴게 Movies에 있으니까 */}
             {/* Movies가 있으면, map 메소드를 이용해서 하나하나 가지고 온다. (하나하나의 Movies를 뜻하는 이름, index도 줘보자) */}
