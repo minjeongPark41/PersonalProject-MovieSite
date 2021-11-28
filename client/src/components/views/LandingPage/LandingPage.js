@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { FaCode } from "react-icons/fa";
+// import { FaCode } from "react-icons/fa";
 import {API_URL, API_KEY, IMAGE_BASE_URL} from '../../Config'
 import MainImage from './Sections/MainImage';
 import GridCards from '../commons/GridCards'
@@ -11,26 +11,38 @@ function LandingPage() {
     const [Movies, setMovies] = useState([])
     // 3. MainImage를 만들어보자 
     const [MainMovieImage, setMainMovieImage] = useState(null)
+    // loadMore 누를 때마다 페이지를 바꿔보자. 초기값은 (0페이지)
+    const [CurrentPage, setCurrentPage] = useState(0)
 
     // 1. API를 가지고 와보자
     useEffect(() => {
         const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=1`
-        fetch(endpoint)
-        .then(response => response.json())
-        //.then(response => console.log(response))
-        // .then(response => console.log(response.results[0]))
-        .then(response => {
-
-            // array
-            setMovies([...response.results])
-            // 가지고 온 이미지들 중에서 첫 번째
-            setMainMovieImage(response.results[0])
-
-        })
+        fetchMovies(endpoint)
 
     }, [])
 
+    // 정보 가지고 와주는 로직 같은거는 함수로 빼준 거
+    const fetchMovies = (endpoint) => {
+        fetch(endpoint)
+            .then(response => response.json())
+            //.then(response => console.log(response))
+            // .then(response => console.log(response.results[0]))
+            .then(response => {
 
+                // array
+                setMovies([...Movies, ...response.results])
+                // 가지고 온 이미지들 중에서 첫 번째
+                setMainMovieImage(response.results[0])
+                // 페이지 정보 바꿔주기
+                setCurrentPage(response.page)
+            })
+    }
+
+    const loadMoreItems = () => {
+
+        const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=${CurrentPage + 1}`
+        fetchMovies(endpoint)
+    }
 
     // 화면 
     return (
@@ -75,7 +87,7 @@ function LandingPage() {
             </div>
 
             <div style={{display:'flex', justifyContent:'center'}}>
-                <button> Load More </button>
+                <button onClick={loadMoreItems}> Load More </button>
             </div>
 
         </div>
