@@ -12,8 +12,6 @@ const {Favorite} = require('../models/Favorite')
 
 router.post('/favoriteNumber', (req, res) => {
 
-    req.body.movieId
-
     // (1) mongoDB에서 favorite 숫자 가지고 오기
     // ㄴ 이러기 위해서는 db 모델 Favorite에 접근해야함. 그래서 import 
     // ㄴ req.body.movieId랑 맞는! movieId를 찾아줘
@@ -29,8 +27,6 @@ router.post('/favoriteNumber', (req, res) => {
 
 router.post('/favorited', (req, res) => {
 
-    req.body.movieId
-
     // (1) mongoDB에서 내가 이 영화를 favorited에 넣었는지'도' 정보 가져오기
     // ㄴ req.body.userFrom이랑 맞는! userFrom을 찾아줘
     Favorite.find({ "movieId": req.body.movieId, "userFrom": req.body.userFrom})
@@ -39,7 +35,7 @@ router.post('/favorited', (req, res) => {
             // (2) 맞는 정보가 있으면 ~ 그 다음에 프론트에 다시 숫자 정보 보내주기
             // ㄴ 만약 []일 경우를 default로 해서 먼저 false로 주고, 값이 있으면 true로 바꾸는 식으로 줘보자
             let result = false;
-            if (info.lenth !== 0){
+            if (info.length !== 0){
                 result = true
             }
 
