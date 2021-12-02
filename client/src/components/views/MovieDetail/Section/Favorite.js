@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import Axios from 'axios'
 
 function Favorite(props) {
@@ -9,6 +9,9 @@ function Favorite(props) {
     const movieTitle = props.movieInfo.title
     const moviePost = props.movieInfo.backdrop_path
     const movieRunTime = props.movieInfo.runtime
+    
+    const [FavoriteNumber, setFavoriteNumber] = useState(0)
+    const [Favorited, setFavorited] = useState(false)
 
 
 
@@ -26,7 +29,8 @@ function Favorite(props) {
         Axios.post('/api/favorite/favoriteNumber', variable) 
             // 서버에서 처리해준 다음에, 결과를 다시 받음
             .then(response => {
-                console.log('responseForFavorite', response.data)
+                // console.log('responseForFavorite', response.data)
+                setFavoriteNumber(response.data.favoriteNumber)
                 if (response.data.success){
 
             } else{
@@ -35,12 +39,29 @@ function Favorite(props) {
         
         })
 
+        // 내가 이 영화 Favorite에 담았는지 확인
+        Axios.post('/api/favorite/favorited', variable) 
+            // 서버에서 처리해준 다음에, 결과를 다시 받음
+            .then(response => {
+                if (response.data.success){
+                    console.log('favorited', response.data) 
+                    // 헷갈릴까봐 적어주는건데 favorited 여기서 콘솔창에 이름 준거라는거 그냥
+                    setFavorited(response.data.favorited)
+            } else{
+                alert("favorite에 담지 않았습니다.")
+            }
+        
+        })
+
+
     }, [])
 
 
     return (
         <div>
-            <button>Favorite</button>
+            {/* Favotied가 true면 - 즉, 좋아요가 있었으면 */}
+            {/* {FavoriteNumber는 현재 좋아요 '숫자' 보여주는거} */}
+            <button>{Favorited? "Cancle Favorite": "Add to Favorite"} {FavoriteNumber} </button>
         </div>
     )
 }

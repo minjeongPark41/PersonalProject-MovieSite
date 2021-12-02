@@ -22,10 +22,30 @@ router.post('/favoriteNumber', (req, res) => {
             if (err) return res.status(400).send(err)
             // (2) 맞는 정보가 있으면 ~ 그 다음에 프론트에 다시 숫자 정보 보내주기
             // ㄴ 만약 info 정보가 1,2,3 이라는 user가 눌렀다는거면 그 정보의 lenth만 
-            res.status(200).json({ success:true, FavoriteNumber: info.length })
+            res.status(200).json({ success:true, favoriteNumber: info.length })
         })
         
+})
 
+router.post('/favorited', (req, res) => {
+
+    req.body.movieId
+
+    // (1) mongoDB에서 내가 이 영화를 favorited에 넣었는지'도' 정보 가져오기
+    // ㄴ req.body.userFrom이랑 맞는! userFrom을 찾아줘
+    Favorite.find({ "movieId": req.body.movieId, "userFrom": req.body.userFrom})
+        .exec((err, info) => {
+            if (err) return res.status(400).send(err)
+            // (2) 맞는 정보가 있으면 ~ 그 다음에 프론트에 다시 숫자 정보 보내주기
+            // ㄴ 만약 []일 경우를 default로 해서 먼저 false로 주고, 값이 있으면 true로 바꾸는 식으로 줘보자
+            let result = false;
+            if (info.lenth !== 0){
+                result = true
+            }
+
+            res.status(200).json({ success:true, favorited: result })
+        })
+        
 })
 
 
