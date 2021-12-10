@@ -44,6 +44,27 @@ router.post('/favorited', (req, res) => {
         
 })
 
+router.post('/addFavorite', (req, res) => {
+
+    const favorite = new Favorite(req.body)
+
+    favorite.save((err, doc) => {
+        if (err) return res.status(400).send(err)
+        return res.status(200).json({ success: true }) 
+    })    
+})
+
+router.post('/removeFromFavorite', (req, res) => {
+
+    Favorite.findOneAndDelete({ movieId: req.body.movieId, userFrom: req.body.userFrom })
+        // exec() 메서드는 주어진 문자열에서 일치 탐색을 수행한 결과를 배열 혹은 null로 반환
+        .exec((err, doc) => {
+            if (err) return res.status(400).send(err)
+            res.status(200).json({ success: true, doc})
+        })
+        
+})
+
 
 
 module.exports = router;

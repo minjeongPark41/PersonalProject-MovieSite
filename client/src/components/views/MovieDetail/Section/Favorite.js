@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import Axios from 'axios'
+import { Button } from 'antd';
 
 function Favorite(props) {
 
@@ -15,8 +16,12 @@ function Favorite(props) {
 
     let variable ={
         // 누가 좋아요 눌렀는지, 어떤 영화 좋아했는지에 대한 정보를 Axios에 같이 보내줘야 올바른 정보를 받을 수 있음
-        userFrom,
-        movieId
+        // userFrom: userFrom이라고 적어주는 것과 동일
+        userFrom, 
+        movieId,
+        movieTitle,
+        moviePost,
+        movieRunTime
     }
 
     // Favorite 누르면 해주고 싶은 것들 로직 짜주기
@@ -61,7 +66,8 @@ function Favorite(props) {
             Axios.post('/api/favorite/removeFromFavorite', variable)
                 .then(response => {
                     if (response.data.success){
-
+                        setFavoriteNumber(FavoriteNumber -1)
+                        setFavorited(!Favorited)
                     }else{
                         alert('Favorite 삭제를 실패했습니다.')
                     }
@@ -72,7 +78,8 @@ function Favorite(props) {
             Axios.post('/api/favorite/addFavorite', variable)
                 .then(response => {
                     if (response.data.success){
-
+                        setFavoriteNumber(FavoriteNumber +1)
+                        setFavorited(!Favorited)
                     }else{
                         alert('Favorite 추가를 실패했습니다.')
                     }
@@ -87,7 +94,7 @@ function Favorite(props) {
         <div>
             {/* Favotied가 true면 - 즉, 좋아요가 있었으면 */}
             {/* {FavoriteNumber는 현재 좋아요 '숫자' 보여주는거} */}
-            <button onClick={onClickFavorite}>{Favorited? "Cancle Favorite": "Add to Favorite"} {FavoriteNumber} </button>
+            <Button onClick={onClickFavorite}>{Favorited? "Cancle Favorite": "Add to Favorite"} {FavoriteNumber} </Button>
         </div>
     )
 }
